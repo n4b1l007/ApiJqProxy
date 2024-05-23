@@ -1,4 +1,6 @@
-﻿namespace ApiJqProxy
+﻿using ApiJqProxy.Model;
+
+namespace ApiJqProxy
 {
     public class ApiJqProxyMiddleware
     {
@@ -16,12 +18,15 @@
                 string result = string.Empty;
                 List<HttpMethodInfoModel> controllerInfos = ControllerLoader.LoadControllers();
 
+                List<ApiEndpoint> endpoints = new List<ApiEndpoint>();
                 // Iterate over the list of controller information.
                 foreach (HttpMethodInfoModel controllerInfo in controllerInfos)
                 {
                     result += controllerInfo.Route + " " + controllerInfo.Name + @"
                     " ;
                     // Do something with the controller information.
+
+                    endpoints.Add(new ApiEndpoint(controllerInfo.Route, controllerInfo.Name));
                 }
 
                 // Generate the JavaScript file dynamically.
@@ -30,6 +35,11 @@
                     https://localhost:7239/swagger/index.html
 
                     " + result;
+
+                AjaxFunctionGenerator generator = new AjaxFunctionGenerator();
+                string jsCode = generator.GenerateAjaxFunctions(endpoints);
+                javascript += @"
+" + jsCode;
 
                 // Write the JavaScript file to the response.
                 context.Response.ContentType = "text/javascript";

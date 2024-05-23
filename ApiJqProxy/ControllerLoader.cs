@@ -28,7 +28,7 @@ namespace ApiJqProxy
                                 Attribute.IsDefined(method, typeof(HttpDeleteAttribute))
                                 )
                             {
-                                string route = GetRouteFromMethod(method);
+                                string? route = GetRouteFromMethod(method);
                                 controllerInfos.Add(new HttpMethodInfoModel
                                 {
                                     Route = route,
@@ -41,11 +41,11 @@ namespace ApiJqProxy
             }
             return controllerInfos;
         }
-        public static string GetRouteFromMethod(MethodInfo method)
+        public static string? GetRouteFromMethod(MethodInfo method)
         {
             if (Attribute.IsDefined(method, typeof(RouteAttribute)))
             {
-                RouteAttribute routeAttribute = method?.GetCustomAttribute<RouteAttribute>();
+                RouteAttribute? routeAttribute = method?.GetCustomAttribute<RouteAttribute>();
 
                 return routeAttribute?.Template;
             }
@@ -57,14 +57,14 @@ namespace ApiJqProxy
 
         private static string GetControllerAndActionName(MethodInfo method)
         {
-            string controllerName = GetControllerName(method);
+            string? controllerName = GetControllerName(method);
             return $"{controllerName}/{method?.Name}";
         }
 
-        private static string GetControllerName(MethodInfo method)
+        private static string? GetControllerName(MethodInfo method)
         {
-            string controllerFullName = method?.DeclaringType?.Name;
-            string controllerName = controllerFullName.Substring(0, controllerFullName.Length - "controller".Length);
+            string? controllerFullName = method?.DeclaringType?.Name;
+            string? controllerName = controllerFullName?.Substring(0, controllerFullName.Length - "controller".Length);
             return controllerName;
         }
     }
