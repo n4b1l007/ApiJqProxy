@@ -5,45 +5,32 @@ namespace ApiJqProxy
     public class ApiJqProxyMiddleware
     {
         public RequestDelegate Next { get; set; }
+        public string JsFileName { get; set; }
 
-        public ApiJqProxyMiddleware(RequestDelegate next)
+        public ApiJqProxyMiddleware(RequestDelegate next, string jsFileName)
         {
             Next = next;
+            JsFileName = jsFileName;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Path == "/my-middleware.js")
+            if (context.Request.Path == $"/{JsFileName}.js")
             {
+                var hostUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+
                 string result = string.Empty;
                 List<HttpMethodInfoModel> controllerInfos = ControllerLoader.LoadControllers();
 
-                List<ApiEndpoint> endpoints = new List<ApiEndpoint>();
-                // Iterate over the list of controller information.
-                foreach (HttpMethodInfoModel controllerInfo in controllerInfos)
-                {
-                    result += controllerInfo.Route + " " + controllerInfo.Name + @"
-                    " ;
-                    // Do something with the controller information.
-
-                    endpoints.Add(new ApiEndpoint(controllerInfo.Route, controllerInfo.Name));
-                }
-
-                // Generate the JavaScript file dynamically.
-                string javascript = @"alert('Hello, world!'); 
-
-                    https://localhost:7239/swagger/index.html
-
-                    " + result;
-
+                IEnumerable<ApiEndpoint> endpoints = controllerInfos
+                    .Select(s=> new ApiEndpoint(s.Route, s.Name, s.ControllerName));
+                
                 AjaxFunctionGenerator generator = new AjaxFunctionGenerator();
-                string jsCode = generator.GenerateAjaxFunctions(endpoints);
-                javascript += @"
-" + jsCode;
+                string jsCode = generator.GenerateAjaxFunctions(endpoints, hostUrl);
 
                 // Write the JavaScript file to the response.
                 context.Response.ContentType = "text/javascript";
-                await context.Response.WriteAsync(javascript);
+                await context.Response.WriteAsync(jsCode);
             }
             else
             {

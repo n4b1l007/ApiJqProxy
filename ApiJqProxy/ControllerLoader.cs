@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiJqProxy.Model;
+using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
 namespace ApiJqProxy
@@ -32,7 +33,8 @@ namespace ApiJqProxy
                                 controllerInfos.Add(new HttpMethodInfoModel
                                 {
                                     Route = route,
-                                    Name = method.Name
+                                    Name = method.Name,
+                                    ControllerName = type.Name.Replace("Controller", string.Empty).ToLower(),
                                 });
                             }
                         }
@@ -58,7 +60,8 @@ namespace ApiJqProxy
         private static string GetControllerAndActionName(MethodInfo method)
         {
             string? controllerName = GetControllerName(method);
-            return $"{controllerName}/{method?.Name}";
+            string? ActionName = GetActionName(method?.Name);
+            return $"{controllerName}/{ActionName}";
         }
 
         private static string? GetControllerName(MethodInfo method)
@@ -66,6 +69,18 @@ namespace ApiJqProxy
             string? controllerFullName = method?.DeclaringType?.Name;
             string? controllerName = controllerFullName?.Substring(0, controllerFullName.Length - "controller".Length);
             return controllerName;
+        }
+
+        private static string? GetActionName(string methodName)
+        {
+            string[] httpVerbs = new[] { "GET", "POST", "PUT", "PATCH", "DELETE" };
+
+
+            if (httpVerbs.Any(a=> a == methodName.ToUpper()))
+            {
+                return string.Empty;
+            }
+            else { return methodName; }
         }
     }
 }
