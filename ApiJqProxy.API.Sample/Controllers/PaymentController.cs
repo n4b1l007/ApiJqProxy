@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiJqProxy.Sample.Controllers
+namespace ApiJqProxy.API.Sample.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -11,8 +11,8 @@ namespace ApiJqProxy.Sample.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet(Name = "GetPayment")]
-        //[Route("/api/weather")]
+        //[HttpGet(Name = "GetPayment")]
+        //[Route("/api/Payment")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -31,7 +31,7 @@ namespace ApiJqProxy.Sample.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(string data)
+        public IActionResult Post(WeatherForecast data)
         {
             return Ok();
         }

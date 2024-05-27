@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49687",
-      "sslPort": 44395
+      "applicationUrl": "http://localhost:40425",
+      "sslPort": 44398
     }
   },
   "profiles": {
-    "ApiJqProxy.Sample": {
+    "ApiJqProxy.API.Sample": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "my-middleware.js",
-      "applicationUrl": "https://localhost:7239;http://localhost:5148",
+      "launchUrl": "my-api-proxy.js",
+      "applicationUrl": "https://localhost:7017;http://localhost:5177",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

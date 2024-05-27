@@ -1,4 +1,4 @@
-namespace ApiJqProxy.Sample
+namespace ApiJqProxy.API.Sample
 {
     public class WeatherForecast
     {

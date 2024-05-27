@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiJqProxy.Sample.Controllers
+namespace ApiJqProxy.API.Sample.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -11,8 +11,14 @@ namespace ApiJqProxy.Sample.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet(Name = "GetWeatherForecast")]
-        //[Route("/api/weather")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -22,30 +28,6 @@ namespace ApiJqProxy.Sample.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult Post(string data)
-        {
-            return Ok();
-        }
-
-        [HttpPut]
-        public IActionResult Put(string data)
-        {
-            return Ok();
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            return Ok();
         }
     }
 }
